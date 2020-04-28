@@ -4,6 +4,7 @@ import { db } from '../../services/fire';
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import { Button, Modal } from 'react-bootstrap';
 
 class Beneficiary extends React.Component {
 
@@ -12,7 +13,10 @@ class Beneficiary extends React.Component {
 
         this.state = {
             peopleTop10: [],
+            showModal: false,
         }
+
+        this.handleClose = this.handleClose.bind(this);
         
     }
     
@@ -31,7 +35,8 @@ class Beneficiary extends React.Component {
                     full_name: val.NOMBRE + ' ' + val.APELLIDO,
                     total: this.formatNumber(val.MONEY),
                     relacion: val.RUTA,
-                    producto: val.PRODUCTO, numero_producto: val.NUMERO_PRODUCTO
+                    producto: val.PRODUCTO, 
+                    numero_producto: val.NUMERO_PRODUCTO
                 });
                 
             });
@@ -47,20 +52,58 @@ class Beneficiary extends React.Component {
                 snap.full_name = snap.NOMBRE +' '+ snap.APELLIDO
                 snap.relacion = snap.RUTA
                 snap.total = this.formatNumber(snap.MONEY)
+                snap.producto = snap.PRODUCTO
+                snap.numero_producto = snap.NUMERO_PRODUCTO
                 adapterData.push(snap);
             });
         }
         return adapterData;
     }
 
+    rowEvents = {
+        onClick: (e, row, rowIndex) => {
+            this.nombre = row.full_name
+            this.producto = row.producto
+            this.numero_producto = row.numero_producto
+            this.setState(state => ({
+                showModal: !state.showModal
+            }));
+
+        }
+      };
+    
+    handleClose() {
+        this.nombre = ""
+        this.producto = ""
+        this.numero_producto = ""
+        this.setState(state => ({
+            showModal: !state.showModal
+        }));
+    }
+    
+
     render() {
         return (
             <div>
                 <div className='topten'>
-                    <BootstrapTable keyField='ID' data={ this.state.peopleTop10 } columns={ columns } striped bordered hover/>
+                    <BootstrapTable keyField='ID' data={ this.state.peopleTop10 } columns={ columns } rowEvents={this.rowEvents} striped bordered hover/>
                 </div>
                 <div className='allpeople'>
-                    <BootstrapTable keyField='ID' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } striped bordered hover/>
+                    <BootstrapTable keyField='ID' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } rowEvents={this.rowEvents} striped bordered hover/>
+                </div>
+                <div>
+                    <Modal show={this.state.showModal} onHide={this.handleClose}>
+                        <Modal.Header closeButton>
+                        <Modal.Title>{this.nombre}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>{this.producto}</Modal.Body>
+                        <Modal.Body>{this.numero_producto}</Modal.Body>
+                        <Modal.Footer>
+                        <Button variant="primary" onClick={this.handleClose}>
+                            Cerrar
+                        </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </div>
         )
