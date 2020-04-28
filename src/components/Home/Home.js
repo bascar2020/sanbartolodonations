@@ -31,9 +31,9 @@ export default class Home extends Component {
       } else {
           // No user is signed in.
           console.log('There is no logged in user');
-          this.props.history.push({
-            pathname: '/'
-          });
+          if(this._isMounted){
+            this.props.history.push('/');
+          }
       }
     });
   }

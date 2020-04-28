@@ -3,7 +3,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './TabsC.css';
 import { db } from '../../services/fire';
-
+import Donations from '../Donations/Donations'
 class TabC extends React.Component {
 constructor(props) {
     super(props)
@@ -48,5 +48,4 @@ render() {
 
 
 const Beneficiarios = ()=> "lilsta de benefiaisod";
-const Donations = ()=> "Donations";
 export default TabC;

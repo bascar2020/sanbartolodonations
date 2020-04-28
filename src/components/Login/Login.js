@@ -19,17 +19,19 @@ export default class Login extends Component {
 }
 
 handleClick = () => {
-    let that = this;
+  
     this.setState({isLoading:true});
     auth.signInAnonymously()
-    auth.onAuthStateChanged(function(user) {
+    auth.onAuthStateChanged( user => {
       if (user) {
         if(this._isMounted){
           this.setState({isLoading:false});
           this.props.history.push('/home');
         }
       } else {
-        that.setState({isLoading:false});
+        if(this._isMounted){
+          this.setState({isLoading:false});
+        }
       }
     });
   }
@@ -51,7 +53,9 @@ handleClick = () => {
     });
   }
 
-  compon
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
     return (
