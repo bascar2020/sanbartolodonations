@@ -1,5 +1,5 @@
 
-Register donations for people affected by COVID19 in San Bartolome la Merced
+Register donations for people affected by COVID 19 in San Bartolome la Merced
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
