@@ -19,7 +19,7 @@ componentDidMount() {
         /* Update React state when message is added at Firebase Database */
         let allPeople = [];
         snapshot.forEach((snap) => {
-            allPeople.push({id: snap.key, val: snap.val()});
+            allPeople.push(snap.val());
         });
         this.setState({ allPeople });
     })

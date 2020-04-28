@@ -27,7 +27,7 @@ class Beneficiary extends React.Component {
             snapshot.forEach((snap) => {
                 let val = snap.val();
                 peopleTop10.push({
-                    id: snap.key,
+                    ID: val.ID,
                     full_name: val.NOMBRE + ' ' + val.APELLIDO,
                     total: this.formatNumber(val.MONEY),
                     relacion: val.RUTA,
@@ -41,15 +41,13 @@ class Beneficiary extends React.Component {
   
     }
     adapterTable(data) {
-        
         let adapterData = [];
         if (data.length > 0) {
-            data.forEach((snap, i) => {
-                snap.val.id = i;
-                snap.val.full_name = snap.val.NOMBRE +' '+ snap.val.APELLIDO
-                snap.val.relacion = snap.val.RUTA
-                snap.val.total = this.formatNumber(snap.val.MONEY)
-                adapterData.push(snap.val);
+            data.forEach((snap) => {
+                snap.full_name = snap.NOMBRE +' '+ snap.APELLIDO
+                snap.relacion = snap.RUTA
+                snap.total = this.formatNumber(snap.MONEY)
+                adapterData.push(snap);
             });
         }
         return adapterData;
@@ -59,10 +57,10 @@ class Beneficiary extends React.Component {
         return (
             <div>
                 <div className='topten'>
-                    <BootstrapTable keyField='id' data={ this.state.peopleTop10 } columns={ columns } striped bordered hover/>
+                    <BootstrapTable keyField='ID' data={ this.state.peopleTop10 } columns={ columns } striped bordered hover/>
                 </div>
                 <div className='allpeople'>
-                    <BootstrapTable keyField='id' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } striped bordered hover/>
+                    <BootstrapTable keyField='ID' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } striped bordered hover/>
                 </div>
             </div>
         )

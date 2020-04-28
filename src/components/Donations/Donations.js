@@ -21,6 +21,17 @@ export default class Donations extends Component {
         });
       };
 
+    adapterSelect2 = (data) => {
+            let adapterData = [];
+            if (data.length > 0) {
+                data.forEach((snap) => {
+                    snap.full_name = snap.NOMBRE +' '+ snap.APELLIDO
+                    adapterData.push({ value: snap.ID, label: snap.full_name , data: snap});
+                });
+            }
+            return adapterData;
+        }
+
     render() {
         return (
             <div>
@@ -28,7 +39,7 @@ export default class Donations extends Component {
                 <Form>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Beneficiario</Form.Label>
-                    <Select options={this.options} />
+                    <Select options={this.adapterSelect2(this.props.allPeople)} />
                     <Form.Text className="text-muted">
                         Busca el nombre de la persona que deseas hacer un aporte
                     </Form.Text>
