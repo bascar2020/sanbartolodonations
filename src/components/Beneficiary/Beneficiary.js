@@ -1,8 +1,8 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './Beneficiary.css';
 import { db } from '../../services/fire';
 import BootstrapTable from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 class Beneficiary extends React.Component {
@@ -12,8 +12,6 @@ class Beneficiary extends React.Component {
 
         this.state = {
             peopleTop10: [],
-            allPeople: []
-
         }
         
     }
@@ -27,21 +25,34 @@ class Beneficiary extends React.Component {
             /* Update React state when message is added at Firebase Database */
             let peopleTop10 = [];
             snapshot.forEach((snap) => {
-            peopleTop10.push({nombre: snap.val().NOMBRE + ' ' + snap.val().APELLIDO, total: this.formatNumber(snap.val().MONEY), relacion: 'Ruta ' + snap.val().RUTA, producto: snap.val().PRODUCTO, numero_producto: snap.val().NUMERO_PRODUCTO});
+                let val = snap.val();
+                peopleTop10.push({
+                    id: snap.key,
+                    full_name: val.NOMBRE + ' ' + val.APELLIDO,
+                    total: this.formatNumber(val.MONEY),
+                    relacion: val.RUTA,
+                    producto: val.PRODUCTO, numero_producto: val.NUMERO_PRODUCTO
+                });
+                
             });
             this.setState({ peopleTop10 });
 
         })
-
-        db.ref('people').on('value', snapshot => {
-            /* Update React state when message is added at Firebase Database */
-            let allPeople = [];
-            snapshot.forEach((snap) => {
-                allPeople.push({nombre: snap.val().NOMBRE + ' ' + snap.val().APELLIDO, total: this.formatNumber(snap.val().MONEY), relacion: 'Ruta ' + snap.val().RUTA, producto: snap.val().PRODUCTO, numero_producto: snap.val().NUMERO_PRODUCTO});
+  
+    }
+    adapterTable(data) {
+        
+        let adapterData = [];
+        if (data.length > 0) {
+            data.forEach((snap, i) => {
+                snap.val.id = i;
+                snap.val.full_name = snap.val.NOMBRE +' '+ snap.val.APELLIDO
+                snap.val.relacion = snap.val.RUTA
+                snap.val.total = this.formatNumber(snap.val.MONEY)
+                adapterData.push(snap.val);
             });
-            this.setState({ allPeople });
-
-        })
+        }
+        return adapterData;
     }
 
     render() {
@@ -51,7 +62,7 @@ class Beneficiary extends React.Component {
                     <BootstrapTable keyField='id' data={ this.state.peopleTop10 } columns={ columns } striped bordered hover/>
                 </div>
                 <div className='allpeople'>
-                    <BootstrapTable keyField='id' data={ this.state.allPeople } columns={ columns } pagination={ paginationFactory() } striped bordered hover/>
+                    <BootstrapTable keyField='id' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } striped bordered hover/>
                 </div>
             </div>
         )
@@ -59,7 +70,7 @@ class Beneficiary extends React.Component {
 }
 
 const columns = [{
-dataField: 'nombre',
+dataField: 'full_name',
 text: 'Nombre'
 }, {
 dataField: 'total',
