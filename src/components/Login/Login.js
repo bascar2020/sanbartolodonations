@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import logo from '../../assets/images/logo.svg';
 import './Login.css';
-import {auth} from "../../services/fire"
+import { auth } from "../../services/fire"
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
 export default class Login extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props)
 
@@ -15,22 +17,41 @@ export default class Login extends Component {
       isLoading : false
     }
 }
-  
+
 handleClick = () => {
     let that = this;
     this.setState({isLoading:true});
     auth.signInAnonymously()
     auth.onAuthStateChanged(function(user) {
       if (user) {
-       // console.log(user)
-        that.setState({isLoading:false});
-        that.props.history.push('/home');
-        
+        if(this._isMounted){
+          this.setState({isLoading:false});
+          this.props.history.push('/home');
+        }
       } else {
         that.setState({isLoading:false});
       }
     });
   }
+
+  componentDidMount() {
+    this._isMounted = true;
+
+    auth.onAuthStateChanged( user => {
+      if (user) {
+        if(this._isMounted){
+          this.setState({isLoading:false});
+          this.props.history.push('/home');
+        }
+      } else {
+        if(this._isMounted){
+          this.props.history.push('/');
+        }
+      }
+    });
+  }
+
+  compon
 
   render() {
     return (
@@ -38,7 +59,7 @@ handleClick = () => {
         <header className="Login-header">
           <img src={logo} className="Login-logo" alt="logo" />
           <p>
-          Register donations for people affected by COVID-19 in San Bartolome la Merced
+          Registra tus donaciones de manera anonima a las personas afectadas por el COVID-19 en el Colegio San Bartolome la Merced
           </p>
           <Button
               variant="primary"
