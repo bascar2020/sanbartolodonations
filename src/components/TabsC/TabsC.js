@@ -27,7 +27,7 @@ componentDidMount() {
 
 render() {
     return (
-        <div>
+        <div className="TabsGeneral">
             <Tabs id="tabs">
                 <Tab eventKey="Beneficiarios" title="Beneficiarios">
                     <Beneficiarios allPeople={this.state.allPeople} />

@@ -5,10 +5,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select'
-import logo from '../../assets/images/logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons'
+import { db } from '../../services/fire';
 export default class Donations extends Component {
       state = {
-        startDate: new Date()
+        startDate: new Date(),
+        selectedOption: null,
       };
 
      options = [
@@ -16,13 +19,22 @@ export default class Donations extends Component {
         { value: 'strawberry', label: 'Strawberry' },
         { value: 'vanilla', label: 'Vanilla' }
       ]
-    
-    handleChange = date => {
+    handleChangeSelect = (selectedOption) => {
+        this.setState({ selectedOption });
+    }
+    handleChangeDate = (date) => {
         this.setState({
           startDate: date
         });
       };
-
+    handleSubmit = (event) => {
+        const form = event.currentTarget;
+            if (form.checkValidity() === false || this.state.selectedOption ===  null) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        this.saveData(event.target.elements.money.value);
+      }
     adapterSelect2 = (data) => {
             let adapterData = [];
             if (data.length > 0) {
@@ -33,6 +45,21 @@ export default class Donations extends Component {
             }
             return adapterData;
         }
+    
+    saveData = (money)=> {
+        let postData = {
+            user_id:  this.state.selectedOption.value,
+            value_donation:  parseInt(money),
+            date_donation: this.state.startDate.getTime(),
+            date_added: new Date().getTime()
+        }
+        console.log(postData)
+        db.ref().child('donations').push(postData);
+        
+        let updates = {}
+        updates['/people/'+this.state.selectedOption.value+'/MONEY'] = this.state.selectedOption.data.MONEY + parseInt(money);
+         db.ref().update(updates);
+    } 
 
     render() {
         return (
@@ -41,38 +68,37 @@ export default class Donations extends Component {
                     <Row>
                         <Col md={6}>
                         <Media>
-                            <img
-                                width={64}
-                                height={64}
-                                className="mr-3"
-                                src={logo}
-                                alt="logo"
-                            />
+                            
+                            <FontAwesomeIcon  size="6x" fixedWidth icon= {faHandHoldingHeart} />
                             <Media.Body>
                                 <h5>Formulario de Donacion</h5>
-                                <p>
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at,
-                                tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla.
-                                Donec lacinia congue felis in faucibus.
-                                </p>
+                                <p>Por medio de este formulario podrás seleccionar el beneficiario a quién quieres ayudar, la fecha y el valor de la donación. Tú aporte favorecerá a muchas familias  vulnerables. Todos unidos contribuiremos con una causa social.</p>
                             </Media.Body>
                             </Media>
-                        <Form>
+                        <Form onSubmit={this.handleSubmit}>
                             <Form.Group controlId="formBasicEmail">
                                 
-                                <Select options={this.adapterSelect2(this.props.allPeople)} />
                                 <Form.Text className="text-muted">
                                     Busca el nombre de la persona que deseas hacer un aporte
                                 </Form.Text>
+                                <Select onChange={this.handleChangeSelect} options={this.adapterSelect2(this.props.allPeople)} />
+                                <Form.Control.Feedback type="invalid">
+                                    Seleccione un beneficiario
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <DatePicker
                                 selected={this.state.startDate}
-                                onChange={this.handleChange}
+                                onChange={this.handleChangeDate}
                                 inline
                             />
-                            <Form.Group controlId="formValue">
-                                <Form.Control type="number" placeholder="Valor" />
+                            <Form.Group controlId="money">
+                            <Form.Text className="text-muted">
+                                    Valor del aporte que realizaste
+                                </Form.Text>
+                                <Form.Control  required min="1" type="number" placeholder="Valor" />
+                                <Form.Control.Feedback type="invalid">
+                                    Ingrese un valor mayor a 0
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Button variant="primary" type="submit">
                                 Guardar

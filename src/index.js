@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 //  import './index.css';
 import App from './components/App/App';
+import Indibyte from './components/Indibyte/Indibyte';
 
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <div>
      <App />
+     <Indibyte />
+     
   </div>,
   document.getElementById('root')
 );
