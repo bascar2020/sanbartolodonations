@@ -40,7 +40,7 @@ export default class Donations extends Component {
             if (data.length > 0) {
                 data.forEach((snap) => {
                     snap.full_name = snap.NOMBRE +' '+ snap.APELLIDO
-                    adapterData.push({ value: snap.ID, label: snap.full_name , data: snap});
+                    adapterData.push({ value: snap.ID, label:`${snap.full_name}-${snap.RUTA}` , data: snap});
                 });
             }
             return adapterData;
@@ -71,29 +71,27 @@ export default class Donations extends Component {
                             
                             <FontAwesomeIcon  size="6x" fixedWidth icon= {faHandHoldingHeart} />
                             <Media.Body>
-                                <h5>Formulario de Donacion</h5>
+                                <h5>Registrar Donación</h5>
                                 <p>Por medio de este formulario podrás seleccionar el beneficiario a quién quieres ayudar, la fecha y el valor de la donación. Tú aporte favorecerá a muchas familias  vulnerables. Todos unidos contribuiremos con una causa social.</p>
                             </Media.Body>
                             </Media>
                         <Form onSubmit={this.handleSubmit}>
-                            <Form.Group controlId="formBasicEmail">
-                                
-                                <Form.Text className="text-muted">
-                                    Busca el nombre de la persona que deseas hacer un aporte
-                                </Form.Text>
+                            <Form.Group controlId="formBasicEmail" style={{ position: 'relative', zIndex: '2' }}>
                                 <Select onChange={this.handleChangeSelect} options={this.adapterSelect2(this.props.allPeople)} />
                                 <Form.Control.Feedback type="invalid">
                                     Seleccione un beneficiario
                                 </Form.Control.Feedback>
                             </Form.Group>
+                            <Form.Group controlId="formDate">
                             <DatePicker
                                 selected={this.state.startDate}
                                 onChange={this.handleChangeDate}
                                 inline
                             />
+                            </Form.Group>
                             <Form.Group controlId="money">
                             <Form.Text className="text-muted">
-                                    Valor del aporte que realizaste
+                            Valor del aporte sin comas o puntos
                                 </Form.Text>
                                 <Form.Control  required min="1" type="number" placeholder="Valor" />
                                 <Form.Control.Feedback type="invalid">
@@ -101,7 +99,7 @@ export default class Donations extends Component {
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Button variant="primary" type="submit">
-                                Guardar
+                                Registrar
                             </Button>
                             </Form>
                         </Col>

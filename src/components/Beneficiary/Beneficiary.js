@@ -91,16 +91,14 @@ class Beneficiary extends React.Component {
                         <Col md={10}>
                 <div className="jumbotron jumbotron-fluid">
                     <div className="container">
-                        <h1 className="display-4">Donaciones SBLM</h1>
-                        <p className="lead">Esta app es realizada sin ánimo de lucro, con el fin de hacer las donaciones de manera más equitativa para los empleados del <a href="https://news.google.com/covid19/map?hl=en-US&gl=US&ceid=US:en" className="badge badge-secondary" target="blank">Colegio San Bartolome La Merced</a> afectados por el <a href="https://www.sanbartolo.edu.co/" className="badge badge-info" target="blank">COVID-19</a> en el año 2020</p>
+                        <p className="lead">Gracias por responder al llamado dando de si. El objetivo de esta aplicación es promover una distribución equitativa de las ayudas a los beneficiarios. <a href="https://www.sanbartolo.edu.co/" className="badge badge-info" target="blank">COVID-19</a></p>
                     </div>
                     </div>
                 <div className='padding'>
                     <div className="card bg-light mb-3">
-                        <h5 className="card-header">Top 10</h5>
+                        <h5 className="card-header">Estos son los diez beneficiarios con menos aportes este mes</h5>
                         <div className="card-body">
-                        <p className="card-title lead">Estos son los 10 beneficiarios con menos donaciones este mes</p>
-                        <p className="font-weight-light text-secondary h6">Click en las filas para ver mas informacion.</p>
+                        <p className="font-weight-light text-secondary h6">Click en la fila para ver la información necesaria para hacer un aporte al beneficiario.</p>
                         </div>
                     </div>
                     <BootstrapTable keyField='ID' data={ this.state.peopleTop10 } columns={ columns } rowEvents={this.rowEvents} striped bordered hover/>
@@ -119,8 +117,8 @@ class Beneficiary extends React.Component {
                                 <div className="card bg-light mb-3" >
                                     <h5 className="card-header">Beneficiarios</h5>
                                     <div className="card-body">
-                                    <p className="card-title lead">Estos son todos los beneficiarios registrados a la fecha</p>
-                                    <p className="font-weight-light text-secondary h6">Click en las filas para ver mas informacion.</p>
+                                    <p className="card-title lead">Estos es la lista total de beneficiarios, ordenada aleatoriamente</p>
+                                    <p className="font-weight-light text-secondary h6">Click en la fila para ver la información necesaria para hacer un aporte al beneficiario.</p>
                                     </div>
                                 </div>
                                 <BootstrapTable keyField='ID' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } rowEvents={this.rowEvents} striped bordered hover/>
@@ -136,6 +134,10 @@ class Beneficiary extends React.Component {
                         <Modal.Body>
                             <ul className="list-group">
                                 <li className="list-group-item">Tipo de Producto: <span className="badge badge-success">{this.producto}</span></li>
+                                {this.producto === 'Daviplata'
+                                    ? <a href="http://davivienda.custhelp.com/app/answers/detail/a_id/558/~/%C2%BFqu%C3%A9-es-daviplata%3F" class="btn btn-link" role="button" aria-pressed="true" target='blank'>Que es daviplata?</a>
+                                    : <br></br>
+                                }
                                 <li className="list-group-item">Numero: <span className="badge badge-info">{this.numero_producto}</span></li>
                             </ul>
                         </Modal.Body>
