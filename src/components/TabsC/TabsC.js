@@ -12,18 +12,21 @@ constructor(props) {
 
     this.state = {
         allPeople: [],
-        db_attr: ['MONEY','NOMBRE','APELLIDO','NUMERO_PRODUCTO']
     }
 }
 componentDidMount() {
-    let randomValue = this.state.db_attr[Math.floor(Math.random() * this.state.db_attr.length)];
-    db.ref('people').orderByChild(randomValue).on('value', snapshot => {
+    
+    db.ref('people').on('value', snapshot => {
         /* Update React state when message is added at Firebase Database */
-        let allPeople = [];
+        let preorder = [];
+        let maxisnap = {};
         snapshot.forEach((snap) => {
-            allPeople.push(snap.val());
+            maxisnap = snap.val();
+            maxisnap.random =  Math.random();
+            preorder.push(maxisnap);
         });
-        this.setState({ allPeople });
+        preorder.sort((a,b) => a.random - b.random);
+        this.setState({ allPeople: preorder });
     })
 }
 
@@ -34,7 +37,7 @@ render() {
                 <Tab eventKey="Beneficiarios" title="Beneficiarios">
                     <Beneficiarios allPeople={this.state.allPeople} />
                 </Tab>
-                <Tab eventKey="Donaciones" title="Donaciones">
+                <Tab eventKey="Aporte" title="Aporte">
                     <Donations allPeople={this.state.allPeople} />
                 </Tab>
             </Tabs> 

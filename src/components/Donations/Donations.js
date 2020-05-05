@@ -57,8 +57,8 @@ export default class Donations extends Component {
             let adapterData = [];
             if (data.length > 0) {
                 data.forEach((snap) => {
-                    snap.full_name = snap.NOMBRE +' '+ snap.APELLIDO
-                    adapterData.push({ value: snap.ID, label:`${snap.full_name}-${snap.RUTA}` , data: snap});
+                    snap.full_name = snap.NOMBRE.trim() +' '+ snap.APELLIDO.trim()
+                    adapterData.push({ value: snap.ID, label:`${snap.full_name} - ${snap.RUTA}` , data: snap});
                 });
             }
             return adapterData;
@@ -87,13 +87,7 @@ export default class Donations extends Component {
                 <Container>
                     <Row>
                         <Col md={6}>
-                        <Media>
-                            <img src={logo} className="" alt="logo" />
-                            <Media.Body>
-                                <h5>Registrar Donación</h5>
-                                <p>Por medio de este formulario podrás seleccionar el beneficiario a quién quieres ayudar, la fecha y el valor de la donación. Tú aporte favorecerá a muchas familias  vulnerables. Todos unidos contribuiremos con una causa social.</p>
-                            </Media.Body>
-                            </Media>
+                        <h5>Registrar Aporte</h5>
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Group controlId="formBasicEmail" style={{ position: 'relative', zIndex: '2' }}>
                                 <Select onChange={this.handleChangeSelect} options={this.adapterSelect2(this.props.allPeople)} />
@@ -110,7 +104,7 @@ export default class Donations extends Component {
                             </Form.Group>
                             <Form.Group controlId="money">
                             <Form.Text className="text-muted">
-                            Valor del aporte sin comas o puntos
+                            Valor del aporte sin "$", comas o puntos
                                 </Form.Text>
                                 <Form.Control  required min="1" type="number" placeholder="Valor" />
                                 <Form.Control.Feedback type="invalid">

@@ -71,7 +71,7 @@ export default class Home extends Component {
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
-            Last Signed: {this.state.user} <Link to="/" onClick={this.logout}> Salir</Link>
+            <Link to="/" onClick={this.logout}> Salir</Link>
           </Navbar.Text> 
         </Navbar.Collapse>
         </Navbar>

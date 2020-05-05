@@ -70,7 +70,7 @@ handleClick = () => {
               disabled={this.state.isLoading}
               onClick={!this.state.isLoading ? this.handleClick : null}
             >
-              {this.state.isLoading ? 'Loading…' : 'Haz tu Donación'}
+              {this.state.isLoading ? 'Loading…' : 'Registra tu donación'}
             </Button>
         </header>
       </div>
