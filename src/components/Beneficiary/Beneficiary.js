@@ -5,7 +5,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button, Modal , Container, Row, Col} from 'react-bootstrap';
-
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+const { SearchBar } = Search;
 
 class Beneficiary extends React.Component {
 
@@ -91,7 +92,7 @@ class Beneficiary extends React.Component {
                         <Col md={10}>
                 <div className="jumbotron jumbotron-fluid">
                     <div className="container">
-                        <p className="lead">Gracias por responder al llamado dando de si. El objetivo de esta aplicación es promover una distribución equitativa de las ayudas a los beneficiarios. <a href="https://www.sanbartolo.edu.co/" className="badge badge-info" target="blank">COVID-19</a></p>
+                        <p className="lead">Gracias por responder al llamado dando de si. El objetivo de esta aplicación es promover una distribución equitativa de las ayudas a los beneficiarios.</p>
                     </div>
                     </div>
                 <div className='padding'>
@@ -121,7 +122,26 @@ class Beneficiary extends React.Component {
                                     <p className="font-weight-light text-secondary h6">Click en la fila para ver la información necesaria para hacer un aporte al beneficiario.</p>
                                     </div>
                                 </div>
-                                <BootstrapTable keyField='ID' data={ this.adapterTable(this.props.allPeople) } columns={ columns } pagination={ paginationFactory() } rowEvents={this.rowEvents} striped bordered hover/>
+                                
+
+                                <ToolkitProvider
+                                        keyField="ID"
+                                        data={ this.adapterTable(this.props.allPeople) }
+                                        columns={ columns }
+                                        search
+                                        >
+                                        {
+                                            props => (
+                                            <div>
+                                                <SearchBar { ...props.searchProps} placeholder="Buscar beneficiario" />
+                                                <hr />
+                                                <BootstrapTable
+                                                { ...props.baseProps }
+                                                pagination={ paginationFactory() } rowEvents={this.rowEvents} striped bordered hover />
+                                            </div>
+                                            )
+                                        }
+                                        </ToolkitProvider>
                             </div>
                         </Col>
                     </Row>
