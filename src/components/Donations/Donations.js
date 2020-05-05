@@ -1,24 +1,35 @@
 import React, { Component } from 'react'
 import './Donations.css';
-import { Form, Button, Container, Row, Col, Media} from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Media, Modal} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons'
 import { db } from '../../services/fire';
+import logo from '../../assets/images/logo.svg';
 export default class Donations extends Component {
-      state = {
-        startDate: new Date(),
-        selectedOption: null,
-      };
 
-     options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
+    constructor(props) {
+        super(props)
+        
+		this.saveData = this.saveData.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+        this.state = {
+            startDate: new Date(),
+            selectedOption: null,
+            showModal: false,
+            money: 0,
+        }
+    }
+      
+    formatNumber = (num) => {
+        return '$ ' + num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+    handleClose() {
+		this.setState({ showModal: false });
+	}
+	
+    
     handleChangeSelect = (selectedOption) => {
         this.setState({ selectedOption });
     }
@@ -29,12 +40,19 @@ export default class Donations extends Component {
       };
     handleSubmit = (event) => {
         const form = event.currentTarget;
-            if (form.checkValidity() === false || this.state.selectedOption ===  null) {
+            if (form.checkValidity() === false || this.state.selectedOption  == null) {
                 event.preventDefault();
                 event.stopPropagation();
+            }else{
+                this.setState({
+                    money: event.target.elements.money.value,
+                    showModal: true
+                  });
+                  event.preventDefault();
+                  event.stopPropagation();
             }
-        this.saveData(event.target.elements.money.value);
       }
+
     adapterSelect2 = (data) => {
             let adapterData = [];
             if (data.length > 0) {
@@ -46,19 +64,21 @@ export default class Donations extends Component {
             return adapterData;
         }
     
-    saveData = (money)=> {
+    saveData() {
         let postData = {
             user_id:  this.state.selectedOption.value,
-            value_donation:  parseInt(money),
+            value_donation:  parseInt(this.state.money),
             date_donation: this.state.startDate.getTime(),
             date_added: new Date().getTime()
         }
-        console.log(postData)
+        
         db.ref().child('donations').push(postData);
         
         let updates = {}
-        updates['/people/'+this.state.selectedOption.value+'/MONEY'] = this.state.selectedOption.data.MONEY + parseInt(money);
-         db.ref().update(updates);
+        updates['/people/'+this.state.selectedOption.value+'/MONEY'] = this.state.selectedOption.data.MONEY + postData.value_donation;
+        db.ref().update(updates);
+        this.setState({ showModal: false });
+        window.location.reload();
     } 
 
     render() {
@@ -68,8 +88,7 @@ export default class Donations extends Component {
                     <Row>
                         <Col md={6}>
                         <Media>
-                            
-                            <FontAwesomeIcon  size="6x" fixedWidth icon= {faHandHoldingHeart} />
+                            <img src={logo} className="" alt="logo" />
                             <Media.Body>
                                 <h5>Registrar Donación</h5>
                                 <p>Por medio de este formulario podrás seleccionar el beneficiario a quién quieres ayudar, la fecha y el valor de la donación. Tú aporte favorecerá a muchas familias  vulnerables. Todos unidos contribuiremos con una causa social.</p>
@@ -105,6 +124,24 @@ export default class Donations extends Component {
                         </Col>
                     </Row>
                 </Container>
+                <div>
+                <Modal show={this.state.showModal} onHide={this.handleClose}>
+					<Modal.Header closeButton>
+						<Modal.Title>¿La informacion es correcta?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+                        <p>{`Donación para ${this.state.selectedOption ?this.state.selectedOption.label: "" } por un valor de ${this.formatNumber(this.state.money)}`}</p>
+                    </Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={this.handleClose}>
+							Cerrar
+                        </Button>
+						<Button variant="primary" onClick={this.saveData}>
+							Guardar
+                        </Button>
+					</Modal.Footer>
+				</Modal>
+                </div>
             </div>
         )
     }

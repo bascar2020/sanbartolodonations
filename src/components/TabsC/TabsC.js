@@ -11,11 +11,13 @@ constructor(props) {
     super(props)
 
     this.state = {
-        allPeople: []
+        allPeople: [],
+        db_attr: ['MONEY','NOMBRE','APELLIDO','NUMERO_PRODUCTO']
     }
 }
 componentDidMount() {
-    db.ref('people').on('value', snapshot => {
+    let randomValue = this.state.db_attr[Math.floor(Math.random() * this.state.db_attr.length)];
+    db.ref('people').orderByChild(randomValue).on('value', snapshot => {
         /* Update React state when message is added at Firebase Database */
         let allPeople = [];
         snapshot.forEach((snap) => {

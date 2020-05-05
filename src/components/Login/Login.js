@@ -62,9 +62,9 @@ handleClick = () => {
       <div className="Login">
         <header className="Login-header">
           <img src={logo} className="Login-logo" alt="logo" />
-          <p>
-          Registra tus donaciones de manera anonima a las personas afectadas por el COVID-19 en el Colegio San Bartolome la Merced
-          </p>
+          <br/>
+          <br/>
+          
           <Button
               variant="primary"
               disabled={this.state.isLoading}

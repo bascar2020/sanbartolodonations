@@ -135,7 +135,7 @@ class Beneficiary extends React.Component {
                             <ul className="list-group">
                                 <li className="list-group-item">Tipo de Producto: <span className="badge badge-success">{this.producto}</span></li>
                                 {this.producto === 'Daviplata'
-                                    ? <a href="http://davivienda.custhelp.com/app/answers/detail/a_id/558/~/%C2%BFqu%C3%A9-es-daviplata%3F" class="btn btn-link" role="button" aria-pressed="true" target='blank'>Que es daviplata?</a>
+                                    ? <a href="http://davivienda.custhelp.com/app/answers/detail/a_id/558/~/%C2%BFqu%C3%A9-es-daviplata%3F" class="btn btn-link" role="button" aria-pressed="true" target='blank'>¿Que es daviplata?</a>
                                     : <br></br>
                                 }
                                 <li className="list-group-item">Numero: <span className="badge badge-info">{this.numero_producto}</span></li>

@@ -66,7 +66,7 @@ export default class Home extends Component {
             height="30"
             className="d-inline-block align-top"
             />{' '}
-          SBLM Donations
+          Dónate
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
